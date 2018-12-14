@@ -1,0 +1,55 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Test Async/Await</title>
+    <style>
+        *{
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div id="statusConnect" style="margin-bottom: 2em;">
+
+    </div>
+    <div >
+        <ul id="apicontent" style="list-style:none; padding: 0;">
+        </ul>
+    </div>
+    <script>
+        run();
+        async function run() {
+            var divStatusConnect = document.getElementById("statusConnect");
+            var divapicontent = document.getElementById("apicontent");
+            divStatusConnect.innerText = 'Start  ...';
+            const data = await getPhoto('https://jsonplaceholder.typicode.com/photos');
+            var templateHTML = '';
+            divStatusConnect.innerText = 'Finish  ...';
+            var ob = JSON.parse(data);
+            console.log(ob);
+            for (var i = 0, len = ob.length; i < 5; i++) {
+                var item = ob[i];
+                templateHTML += `<li>
+                <div>           
+                    <h5>${item.title}</h5>
+                    <h6>${item.id}</h6>
+                    <img width="100px" src="${item.url}" height="auto" alt="Alternate Text" />
+                </div>
+            </li>`;
+            }
+            divapicontent.innerHTML = templateHTML;
+        }
+        function getPhoto(url){
+            return new Promise(function (resolve, reject) {
+                var http = new XMLHttpRequest();
+                http.onreadystatechange = function () {
+                    if (http.readyState === 4 && http.status === 200) {
+                        resolve(http.responseText);
+                    }
+                };
+                http.open('GET', url, true);
+                http.send();
+            });
+        }
+    </script>
+</body>
+</html>
