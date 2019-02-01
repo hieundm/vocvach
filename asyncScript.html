@@ -8,8 +8,14 @@
     </style>
 </head>
 <body>
-    <div id="statusConnect" style="margin-bottom: 2em;">
-
+    <h6 id="statusConnect"></h6>
+    <div  style="margin-bottom: 2em;">
+        <h4>Search:</h4>
+        <form method="GET">
+            <input type="text" placeholder="Ten ca si" name="artist" />
+            <input type="text" placeholder="Ten bai hat" name="track" />
+            <button id="btnSearch" onclick="submitSearch('f06c2ca3b5c1b08b6e136ba20953daf4');" type="button">Search</button>
+        </form>
     </div>
     <div >
         <ul id="apicontent" style="list-style:none; padding: 0;">
@@ -18,25 +24,7 @@
     <script>
         run();
         async function run() {
-            var divStatusConnect = document.getElementById("statusConnect");
-            var divapicontent = document.getElementById("apicontent");
-            divStatusConnect.innerText = 'Start  ...';
-            const data = await getPhoto('https://jsonplaceholder.typicode.com/photos');
-            var templateHTML = '';
-            divStatusConnect.innerText = 'Finish  ...';
-            var ob = JSON.parse(data);
-            console.log(ob);
-            for (var i = 0, len = ob.length; i < 5; i++) {
-                var item = ob[i];
-                templateHTML += `<li>
-                <div>           
-                    <h5>${item.title}</h5>
-                    <h6>${item.id}</h6>
-                    <img width="100px" src="${item.url}" height="auto" alt="Alternate Text" />
-                </div>
-            </li>`;
-            }
-            divapicontent.innerHTML = templateHTML;
+            
         }
         function getPhoto(url){
             return new Promise(function (resolve, reject) {
@@ -49,6 +37,34 @@
                 http.open('GET', url, true);
                 http.send();
             });
+        }
+        function searchMusic(url) {
+            return new Promise(function (resolve, reject) {
+                var http = new XMLHttpRequest();
+                http.onreadystatechange = function () {
+                    if (http.readyState === 4 && http.status === 200) {
+                        resolve(http.responseText);
+                    }
+                };
+                http.open('GET', url, true);
+                http.send();
+            });
+        }
+        async function submitSearch(API_KEY) {
+            alert('s');
+            var art = document.getElementsByName('artist');
+            var track = document.getElementsByName('track');
+            var divStatusConnect = document.getElementById("statusConnect");
+            var divapicontent = document.getElementById("apicontent");
+            if (art.value !== '' && track.value !== '') {
+                var urlAPi = 'http://ws.audioscrobbler.com/2.0/?method=track.getcorrection&artist=' + art[0].value + '&track=' + track[0].value + '&api_key=' + API_KEY + '&format=json';
+                alert(urlAPi);
+                const result = await searchMusic(urlAPi);
+                divStatusConnect.innerHTML = urlAPi;
+                divapicontent.innerHTML = result;
+            } else {
+                alert('Vui long nhap thong tin..');
+            }
         }
     </script>
 </body>
