@@ -1,5 +1,3 @@
-﻿//this original calendar : @nitinpatel_20236 
-//customize by : MH
 today = new Date();
 currentMonth = today.getMonth();
 currentYear = today.getFullYear();
